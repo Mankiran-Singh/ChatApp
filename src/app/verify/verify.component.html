@@ -1,0 +1,9 @@
+<h2>Verify Email</h2>
+<form [formGroup]="xForm" (ngSubmit)="ResetPassword(xForm.value)">
+    <div class="container">
+        <label for="OneTimePassword"><b>OTP</b></label>
+        <input type="number" ngModel placeholder="Enter OTP" formControlName="OneTimePassword">
+        <span style="color:brown"*ngIf="oneTimePassword && oneTimePassword.invalid && oneTimePassword.touched">This field is not valid</span>
+      </div>
+    <button type="submit">Reset Password</button>
+</form>

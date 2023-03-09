@@ -1,0 +1,40 @@
+<form [formGroup]="xForm" (ngSubmit)="loginUser(xForm.value) ">
+    <div class="imgcontainer">
+      <img src="assets/img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
+  
+    <div class="container">
+      <label for="email"><b>Email</b></label>
+      <input type="text" ngModel placeholder="Enter email" name="email" formControlName="email">
+      <span style="color:brown"*ngIf="email && email.invalid && email.touched">This field is not valid</span>
+      <br>
+
+      <div class="form-group">
+        <label for="password"><b>Password</b></label>
+        <input [type]="changetype?'password':'text'" ngModel placeholder="Enter your password" name="password" formControlName="password">
+        <span style="color:brown"*ngIf="password && password.invalid && password.touched">This field is not valid</span>
+        <span class="eyeicon" (click)="viewpass()"><i [ngClass]="visible?'fa fa-eye':'fa fa-eye-slash'"></i>
+        </span>
+     </div>
+     <asl-google-signin-button *ngIf="!user"></asl-google-signin-button>
+      <button  class="fa fa-facebook"  (click)="signInWithFB()" *ngIf="!user"></button>
+      <div *ngIf="user">
+        <img src="{{ user.photoUrl }}">
+        <div>
+          <h4>{{ user.name }}</h4>
+          <p>{{ user.email }}</p>
+        </div>
+      </div>   
+  
+      <button type="submit" class="loginbtn">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+  
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" class="cancelbtn">Cancel</button>
+      <span class="password">Forgot <a (click)="forgetPassword()">password?</a></span>
+    </div>
+ </form>
+  <router-outlet></router-outlet>
