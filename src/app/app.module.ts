@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
-import {FormControl,FormGroup,Validators,FormsModule,ReactiveFormsModule} from '@angular/forms'
+import {FormsModule,ReactiveFormsModule} from '@angular/forms'
 import { CourseguardService } from './courseguard.service';
 import { AuthServiceService } from './auth-service.service';
 import { SocialLoginModule, SocialAuthServiceConfig, SocialAuthService } from '@abacritt/angularx-social-login';

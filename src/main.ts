@@ -10,20 +10,21 @@ import { CourseguardService } from './app/courseguard.service';
 import { HomeComponent } from './app/home/home.component';
 import { AuthServiceService } from './app/auth-service.service';
 import { ForgetPasswordComponent } from './app/forget-password/forget-password.component';
-import { VerifyComponent } from './app/verify/verify.component';
+
 import { ChangepasswordComponent } from './app/changepassword/changepassword.component';
+import { CandeactivatecourseguardService } from './app/candeactivatecourseguard.service';
 const routes:Route[]=[
   {path:'',redirectTo:'signup',pathMatch:'full'},
   {path:'login',component:LoginComponent},
   {path:'signup',component:SignUpComponent},
-  {path:'home',component:HomeComponent,canActivate:[CourseguardService]},
+  {path:'home',component:HomeComponent,canDeactivate:[CandeactivatecourseguardService]},
   {path:'resetpassword',component:ResetPasswordComponent},
   {path:'forgetpassword',component:ForgetPasswordComponent},
-  {path:'verify',component:VerifyComponent},
+
   {path:'changepassword',component:ChangepasswordComponent}
 ]
 
 bootstrapApplication(AppComponent,{
-  providers:[provideRouter(routes),CourseguardService,AuthServiceService,importProvidersFrom(HttpClientModule)]
+  providers:[provideRouter(routes),CandeactivatecourseguardService,CourseguardService,AuthServiceService,importProvidersFrom(HttpClientModule)]
 })
 .catch(err => console.error(err));

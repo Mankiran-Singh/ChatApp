@@ -48,21 +48,19 @@ export class ChangepasswordComponent {
     confirmpassword: null,
   };
   constructor(private authService:SocialAuthService,private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
-  xForm=new FormGroup({
+  changepassFormForm=new FormGroup({
     oldPassword:new FormControl('',[Validators.required]),
     newPassword:new FormControl('',[Validators.required,Validators.minLength(5)]),
     confirmPassword:new FormControl('',[Validators.required,Validators.minLength(5)])
   })
-  ChangePassword(data:any){
-    const {oldPassword,newPassword,confirmPassword} = this.xForm.value
-    console.log(this.xForm.value);
+  ChangePassword(){
+    const {oldPassword,newPassword,confirmPassword} = this.changepassFormForm.value
   
-     if(this.xForm.valid){    
+     if(this.changepassFormForm.valid){    
       this.authservice.changePassword(oldPassword,newPassword,confirmPassword).subscribe(
         (res:any)=>{
           console.log(res)
-          this.xForm.reset();
-          this.authservice.storeToken(res.data);
+          this.changepassFormForm.reset();
           this.router.navigate(['home']);
         }
       );
@@ -81,14 +79,14 @@ export class ChangepasswordComponent {
 
   get newPassword()
   {
-    return this.xForm.get('newPassword')
+    return this.changepassFormForm.get('newPassword')
   }
   get confirmPassword()
   {
-    return this.xForm.get('confirmPassword')
+    return this.changepassFormForm.get('confirmPassword')
   }
   get oldPassword(){
-    return this.xForm.get('oldPassword')
+    return this.changepassFormForm.get('oldPassword')
   }
 
 

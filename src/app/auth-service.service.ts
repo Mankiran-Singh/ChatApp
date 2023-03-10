@@ -6,10 +6,11 @@ import { Observable, Subject } from 'rxjs';
 
 const url ='http://192.180.0.127:4040/';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+const tokenValue=localStorage.getItem('token')
+const httpOptions = { 
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' ,
+'Authorization': "bearer "+tokenValue})
 };
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,24 +21,15 @@ public authChanged = this.authChangeSub.asObservable();
 public extAuthChanged = this.extAuthChangeSub.asObservable();
 
 
-constructor(private http: HttpClient , private router: Router, private externalAuthService: SocialAuthService) { 
-  // this.externalAuthService.authState.subscribe((res:any) => {
-  //   console.log(res)
-  //   this.extAuthChangeSub.next(res);
-  // })
-}
+constructor(private http: HttpClient , private router: Router, private externalAuthService: SocialAuthService) {}
 
 SignOutExternal (){
   this.externalAuthService.signOut();
 }
 
-// logout(): Observable<any> {
-//   return this.http.post(url + 'signout', { }, httpOptions);
-// }
-
 logOut(){
   localStorage.clear();
-  this.router.navigate(['signup']);
+  this.router.navigate(['login']);
 }
 
 login(email: string| null | undefined, password: string| null | undefined): Observable<any> {
@@ -65,21 +57,21 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
       );
     }
 
-   resetPassword(email:string|null|undefined,newPassword:string|null|undefined,confirmPassword:string|null|undefined): Observable<any> {
+   resetPassword(newPassword:string|null|undefined,confirmPassword:string|null|undefined): Observable<any> {
       return this.http.post(
         url + 'api/Password/ResetPassword',
         {
-          email,
           newPassword,
           confirmPassword
-        }
+        },
+         httpOptions
       );
     }
   
 
     changePassword(oldPassword:string|null|undefined,newPassword:string|null|undefined,confirmPassword:string|null|undefined): Observable<any> {
       return this.http.post(
-        url + 'api/Password/ResetPassword',
+        url + 'api/User/ChangePassword',
         {
           oldPassword,
           newPassword,
@@ -90,16 +82,18 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
 
     forgetPassword(email: string| null | undefined): Observable<any> {
       return this.http.post(
-        url + 'api/Password/ForgetPassword'+'?email='+email,
-
-        httpOptions
+        url + 'api/Password/ForgetPassword',
+        {
+           email
+        }
       );
     }
     
     verifyAndChange(data:any): Observable<any> {
       return this.http.post(
         url + 'api/Password/VerifyMail',
-        data
+          data,
+          httpOptions
       );
     }
 

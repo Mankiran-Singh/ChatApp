@@ -46,21 +46,20 @@ export class LoginComponent {
     email: null,
     password: null,
   };
-  xForm=new FormGroup({
+  loginForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
     password:new FormControl('',[Validators.required,Validators.minLength(5)]),
   })
-  loginUser(data:any){
-    const {email, password} = this.xForm.value
-    console.log(this.xForm.value);
+  loginUser(){
+    const {email, password} = this.loginForm.value
+    console.log(this.loginForm.value);
   
     this.authservice.login(email,password).subscribe(
       (res:any)=>{
         console.log(res)
-        this.xForm.reset();
+        this.loginForm.reset();
         this.authservice.storeToken(res.data);
           this.router.navigate(['home']);
-          alert('login succesful')
       }
     );
   }
@@ -96,10 +95,10 @@ export class LoginComponent {
  }
 
  get email(){
-  return this.xForm.get('email')
+  return this.loginForm.get('email')
 }
 
 get password(){
-  return this.xForm.get('password')
+  return this.loginForm.get('password')
 }
 }

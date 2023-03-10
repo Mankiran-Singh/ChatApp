@@ -1,17 +1,17 @@
-<form [formGroup]="xForm" (ngSubmit)="loginUser(xForm.value) ">
+<form [formGroup]="loginForm" (ngSubmit)="loginUser() ">
     <div class="imgcontainer">
       <img src="assets/img_avatar2.png" alt="Avatar" class="avatar">
     </div>
   
     <div class="container">
       <label for="email"><b>Email</b></label>
-      <input type="text" ngModel placeholder="Enter email" name="email" formControlName="email">
+      <input type="text" placeholder="Enter email" name="email" formControlName="email">
       <span style="color:brown"*ngIf="email && email.invalid && email.touched">This field is not valid</span>
       <br>
 
       <div class="form-group">
         <label for="password"><b>Password</b></label>
-        <input [type]="changetype?'password':'text'" ngModel placeholder="Enter your password" name="password" formControlName="password">
+        <input [type]="changetype?'password':'text'" placeholder="Enter your password" name="password" formControlName="password">
         <span style="color:brown"*ngIf="password && password.invalid && password.touched">This field is not valid</span>
         <span class="eyeicon" (click)="viewpass()"><i [ngClass]="visible?'fa fa-eye':'fa fa-eye-slash'"></i>
         </span>

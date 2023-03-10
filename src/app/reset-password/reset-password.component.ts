@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthServiceService } from '../auth-service.service';
 import { CourseguardService } from '../courseguard.service';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SocialAuthServiceConfig, SocialLoginModule,SocialAuthService} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
+import { Token } from '@angular/compiler';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
@@ -39,35 +40,37 @@ import {
     }
   ]
 })
-export class ResetPasswordComponent 
+export class ResetPasswordComponent implements OnInit
 {
   form: any = {
     email:null,
     newpassword: null,
     confirmpassword: null,
   };
-  constructor(private authService:SocialAuthService,private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
-  xForm=new FormGroup({
+  constructor(private activatedRoute:ActivatedRoute,private authService:SocialAuthService,private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe((res:any)=>{
+      this.authservice.storeToken(res['token'])
+      console.log(res['token']);
+    })
+  }
+  resetForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
     newPassword:new FormControl('',[Validators.required,Validators.minLength(5)]),
     confirmPassword:new FormControl('',[Validators.required,Validators.minLength(5)])
   })
-  ResetPassword(data:any){
-     if(this.xForm.valid){
-      const {email,newPassword, confirmPassword} = this.xForm.value
-      console.log(this.xForm.value);
-    
-      this.authservice.resetPassword(email,newPassword,confirmPassword).subscribe(
+  ResetPassword(){
+    // if(this.resetForm.valid){
+      const {newPassword, confirmPassword} = this.resetForm.value
+      this.authservice.resetPassword(newPassword,confirmPassword).subscribe(
         (res:any)=>{
           console.log(res)
-          this.xForm.reset();
-          this.authservice.storeToken(res.data);
+          this.resetForm.reset();
+          //this.authservice.storeVerifyToken(res.data.token)
           this.router.navigate(['login']);
         }
       );
-     }else{
-      prompt('Invalid form...')
-     }
+    
   }
   
   visible:boolean = true;
@@ -80,14 +83,14 @@ export class ResetPasswordComponent
 
   get newPassword()
   {
-    return this.xForm.get('newPassword')
+    return this.resetForm.get('newPassword')
   }
   get confirmPassword()
   {
-    return this.xForm.get('confirmPassword')
+    return this.resetForm.get('confirmPassword')
   }
   get email(){
-    return this.xForm.get('email')
+    return this.resetForm.get('email')
   }
 
 }

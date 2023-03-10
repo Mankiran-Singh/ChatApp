@@ -46,19 +46,19 @@ export class ForgetPasswordComponent
     email:null
   };
   constructor(private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
-  xForm=new FormGroup({
+  forgotForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
   })
-  forgetPassword(data:any){
-      const {email} = this.xForm.value
-      console.log(this.xForm.value);
+  forgetPassword(){
+    console.log(this.forgotForm.value)
+      const {email} = this.forgotForm.value
+      console.log(this.forgotForm.value);
     
       this.authservice.forgetPassword(email).subscribe(
         (res:any)=>{
           console.log(res)
-          this.xForm.reset();
-          this.authservice.storeToken(res.data);
-          this.router.navigate(['verify']);
+          this.forgotForm.reset();
+          this.router.navigate(['resetpassword/:id']);
         }
       );
     
