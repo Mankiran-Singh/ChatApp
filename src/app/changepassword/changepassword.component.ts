@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SocialAuthService, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { AuthServiceService } from '../auth-service.service';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl,FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,AbstractControl} from '@angular/forms';
 import { CourseguardService } from '../courseguard.service';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -40,23 +40,50 @@ import {
     }
   ]
 })
-export class ChangepasswordComponent {
+export class ChangepasswordComponent implements OnInit {
 
   form: any = {
     email:null,
     newpassword: null,
     confirmpassword: null,
   };
-  constructor(private authService:SocialAuthService,private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
-  changepassFormForm=new FormGroup({
-    oldPassword:new FormControl('',[Validators.required]),
-    newPassword:new FormControl('',[Validators.required,Validators.minLength(5)]),
-    confirmPassword:new FormControl('',[Validators.required,Validators.minLength(5)])
-  })
-  ChangePassword(){
-    const {oldPassword,newPassword,confirmPassword} = this.changepassFormForm.value
+  changepassFormForm:any
+  constructor(private fb:FormBuilder,private authService:SocialAuthService,private authservice:AuthServiceService,private courseGuard:CourseguardService,private router:Router){}
+  ngOnInit(): void {
+    const fb = this.fb; 
+     this.changepassFormForm=fb.group({
+      oldPassword:new FormControl('',[Validators.required]),
+      newPassword:new FormControl('',[Validators.required,Validators.minLength(5)]),
+      confirmPassword:new FormControl('',[Validators.required]),
+    },{
+      Validators:this.mustMatch('newPassword','confirmPassword')
+    }
+    )
+  }
+ 
   
+
+ 
+  mustMatch(controlName:string,matchingControlName:string){
+    return (formGroup:FormGroup)=>{
+      const control=formGroup.controls[controlName]
+      const matchingcontrol=formGroup.controls[matchingControlName]
+      if(matchingcontrol.errors && !matchingcontrol.errors['mustMatch']){
+        return
+      }
+        if(control.value!=matchingcontrol.value){
+          matchingcontrol.setErrors({mustMatch:true})
+        }else{
+          matchingcontrol.setErrors(null)
+        }
+    }
+  }
+
+
+ showErrors=false;
+  ChangePassword(){
      if(this.changepassFormForm.valid){    
+      const {oldPassword,newPassword,confirmPassword} = this.changepassFormForm.value
       this.authservice.changePassword(oldPassword,newPassword,confirmPassword).subscribe(
         (res:any)=>{
           console.log(res)
@@ -64,8 +91,8 @@ export class ChangepasswordComponent {
           this.router.navigate(['home']);
         }
       );
-     }else{
-      prompt('Invalid form...')
+     }else{ 
+      this.showErrors=true;
      }
   }
   
@@ -89,5 +116,7 @@ export class ChangepasswordComponent {
     return this.changepassFormForm.get('oldPassword')
   }
 
-
+  cancel(){
+    this.router.navigate(['home'])
+  }
 }

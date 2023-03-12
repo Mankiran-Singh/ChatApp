@@ -59,8 +59,9 @@ export class ResetPasswordComponent implements OnInit
     newPassword:new FormControl('',[Validators.required,Validators.minLength(5)]),
     confirmPassword:new FormControl('',[Validators.required,Validators.minLength(5)])
   })
+  showErrors=false;
   ResetPassword(){
-    // if(this.resetForm.valid){
+     if(this.resetForm.valid){
       const {newPassword, confirmPassword} = this.resetForm.value
       this.authservice.resetPassword(newPassword,confirmPassword).subscribe(
         (res:any)=>{
@@ -70,7 +71,9 @@ export class ResetPasswordComponent implements OnInit
           this.router.navigate(['login']);
         }
       );
-    
+     }else{
+      this.showErrors=true
+     }  
   }
   
   visible:boolean = true;
@@ -92,5 +95,7 @@ export class ResetPasswordComponent implements OnInit
   get email(){
     return this.resetForm.get('email')
   }
-
+ cancel(){
+  this.router.navigate(['login'])
+ }
 }

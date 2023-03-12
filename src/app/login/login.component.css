@@ -29,13 +29,6 @@
     opacity: 0.8;
   }
   
-  /* Extra style for the cancel button (red) */
-  .cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: #f44336;
-  }
-  
   /* Center the avatar image inside this container */
   .imgcontainer {
     text-align: center;
@@ -50,7 +43,18 @@
   
   /* Add padding to containers */
   .container {
-    padding: 16px;
+    position: relative;
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    padding: 40px;
+    box-sizing: border-box;
+    background: #ecf0f3;
+    box-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
+    position: absolute;
+    top: 50%;
+    left: 105%;
+    right: 100%;
   }
   
   /* The "Forgot password" text */

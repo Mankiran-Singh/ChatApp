@@ -49,19 +49,28 @@ export class ForgetPasswordComponent
   forgotForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
   })
-  forgetPassword(){
-    console.log(this.forgotForm.value)
-      const {email} = this.forgotForm.value
-      console.log(this.forgotForm.value);
-    
-      this.authservice.forgetPassword(email).subscribe(
-        (res:any)=>{
-          console.log(res)
-          this.forgotForm.reset();
-          this.router.navigate(['resetpassword/:id']);
-        }
-      );
-    
-  }
 
+  showErrors=false;
+  forgetPassword(){
+   if(this.forgotForm.valid){
+    console.log(this.forgotForm.value)
+    const {email} = this.forgotForm.value
+    console.log(this.forgotForm.value);
+  
+    this.authservice.forgetPassword(email).subscribe(
+      (res:any)=>{
+        console.log(res)
+        this.forgotForm.reset();
+        this.router.navigate(['resetpassword/:id']);
+      }
+    ); 
+   }else{
+    this.showErrors=true;
+   }
+  }
+  
+
+  get email(){
+    return this.forgotForm.get('email')
+  }
 }

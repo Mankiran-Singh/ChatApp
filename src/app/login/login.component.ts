@@ -50,8 +50,11 @@ export class LoginComponent {
     email:new FormControl('',[Validators.required,Validators.email]),
     password:new FormControl('',[Validators.required,Validators.minLength(5)]),
   })
+
+  showErrors=false;
   loginUser(){
-    const {email, password} = this.loginForm.value
+    if(this.loginForm.valid){
+      const {email, password} = this.loginForm.value
     console.log(this.loginForm.value);
   
     this.authservice.login(email,password).subscribe(
@@ -62,6 +65,13 @@ export class LoginComponent {
           this.router.navigate(['home']);
       }
     );
+    }else{
+       this.showErrors=true
+      //  const str=prompt('Sign Up first')
+      //  if(str!=null){
+      //   this.router.navigate(['signup'])
+      //  }
+    }
   }
   forgetPassword(){
     this.router.navigate(['forgetpassword'])
