@@ -42,10 +42,7 @@ export class LoginComponent {
   constructor(private authservice:AuthServiceService,private authService:SocialAuthService,private courseguard:CourseguardService,private router:Router,private activatedRoute:ActivatedRoute){
     
   }
-  form: any = {
-    email: null,
-    password: null,
-  };
+
   loginForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
     password:new FormControl('',[Validators.required,Validators.minLength(5)]),
@@ -61,7 +58,8 @@ export class LoginComponent {
       (res:any)=>{
         console.log(res)
         this.loginForm.reset();
-        this.authservice.storeToken(res.data);
+        this.authservice.storeToken(res.data.token);
+        //console.log(res['token'])
           this.router.navigate(['home']);
       }
     );
@@ -110,5 +108,8 @@ export class LoginComponent {
 
 get password(){
   return this.loginForm.get('password')
+}
+signUp(){
+  this.router.navigate(['signup'])
 }
 }

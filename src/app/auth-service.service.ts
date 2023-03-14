@@ -1,4 +1,5 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -27,11 +28,15 @@ SignOutExternal (){
   this.externalAuthService.signOut();
 }
 
-logOut(){
+signOut(){
   localStorage.clear();
-  this.router.navigate(['login']);
+  this.router.navigate(['signup']);
 }
-
+logOut()
+{
+  localStorage.clear();
+  this.router.navigate(['login'])
+}
 login(email: string| null | undefined, password: string| null | undefined): Observable<any> {
   return this.http.post(
     url + 'api/User/Login',
@@ -53,7 +58,8 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
           password,
           phone,
           dateOfBirth
-        }
+        },
+        httpOptions
       );
     }
 
@@ -76,7 +82,8 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
           oldPassword,
           newPassword,
           confirmPassword
-        }
+        },
+        httpOptions
       );
     }
 
@@ -86,14 +93,7 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
         {
            email
         }
-      );
-    }
-    
-    verifyAndChange(data:any): Observable<any> {
-      return this.http.post(
-        url + 'api/Password/VerifyMail',
-          data,
-          httpOptions
+        ,httpOptions
       );
     }
 
@@ -106,11 +106,13 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
     return localStorage.getItem('token')
    }
 
-   isSignedUp():boolean{
-    return !!localStorage.getItem('token')
-   }
-
    isLoggedIn():boolean{
     return !!localStorage.getItem('token')
+   }
+   getDataSearch(data:any){
+     const query={'Name':data}
+     const token =localStorage.getItem('token')
+     const headers={Authorization: `bearer ${token}`}
+     return this.http.get(url+'api/User/Search',{params:query,headers:headers});
    }
 }

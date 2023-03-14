@@ -61,7 +61,7 @@ export class ForgetPasswordComponent
       (res:any)=>{
         console.log(res)
         this.forgotForm.reset();
-        this.router.navigate(['resetpassword/:id']);
+        this.router.navigate(['resetpassword']);
       }
     ); 
    }else{

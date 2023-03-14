@@ -73,6 +73,7 @@ export class SignUpComponent
           console.log(res)
           this.signUpForm.reset();
           this.authservice.storeToken(res.data);
+         // console.log(res['token'])
           this.router.navigate(['home']);
         }
       );

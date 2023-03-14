@@ -13,18 +13,21 @@ import { ForgetPasswordComponent } from './app/forget-password/forget-password.c
 
 import { ChangepasswordComponent } from './app/changepassword/changepassword.component';
 import { CandeactivatecourseguardService } from './app/candeactivatecourseguard.service';
+import { AuthguardService } from './app/authguard.service';
+import { Home1Component } from './app/home1/home1.component';
 const routes:Route[]=[
   {path:'',redirectTo:'signup',pathMatch:'full'},
-  {path:'login',component:LoginComponent},
-  {path:'signup',component:SignUpComponent},
-  {path:'home',component:HomeComponent,canDeactivate:[CandeactivatecourseguardService]},
+  {path:'login',component:LoginComponent,canActivate:[AuthguardService]},
+  {path:'signup',component:SignUpComponent,canActivate:[AuthguardService]},
+  {path:'home',component:HomeComponent,canActivate:[CourseguardService]},
   {path:'resetpassword',component:ResetPasswordComponent},
   {path:'forgetpassword',component:ForgetPasswordComponent},
-
-  {path:'changepassword',component:ChangepasswordComponent}
+  {path:'changepassword',component:ChangepasswordComponent},
+  {path:'home1',component:Home1Component}
 ]
 
+
 bootstrapApplication(AppComponent,{
-  providers:[provideRouter(routes),CandeactivatecourseguardService,CourseguardService,AuthServiceService,importProvidersFrom(HttpClientModule)]
+  providers:[provideRouter(routes),AuthguardService,CandeactivatecourseguardService,CourseguardService,AuthServiceService,importProvidersFrom(HttpClientModule)]
 })
 .catch(err => console.error(err));

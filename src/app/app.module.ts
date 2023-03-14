@@ -13,8 +13,8 @@ import {
 } from '@abacritt/angularx-social-login';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
-
+import { WebsocketsService } from './websockets.service';
+import { ChatService } from './chat.service';
 @NgModule({
   declarations: [
   ],
@@ -27,7 +27,7 @@ import { HttpClient } from '@angular/common/http';
     AppComponent,
     SocialLoginModule
   ],
-  providers:[CourseguardService,AuthServiceService,SocialAuthService,
+  providers:[WebsocketsService,ChatService,CourseguardService,AuthServiceService,SocialAuthService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
