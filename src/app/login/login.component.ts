@@ -59,8 +59,8 @@ export class LoginComponent {
         console.log(res)
         this.loginForm.reset();
         this.authservice.storeToken(res.data.token);
-        //console.log(res['token'])
-          this.router.navigate(['home']);
+        console.log(res.data['token'])
+        this.router.navigate(['home'], { state :{ 'token' : res.data['token'] } });
       }
     );
     }else{
@@ -87,6 +87,10 @@ export class LoginComponent {
   user:any;
   loggedIn:any;
  ngOnInit() {
+  this.activatedRoute.queryParams.subscribe((res:any)=>{
+    this.authservice.storeToken(res['token'])
+    console.log(res['token']);
+  })
    this.authService.authState.subscribe((user) => {
      this.user = user;
      this.loggedIn = (user != null);

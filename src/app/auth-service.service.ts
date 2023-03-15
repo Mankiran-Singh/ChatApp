@@ -1,7 +1,7 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 
@@ -114,5 +114,10 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
      const token =localStorage.getItem('token')
      const headers={Authorization: `bearer ${token}`}
      return this.http.get(url+'api/User/Search',{params:query,headers:headers});
+   }
+   dataEmitter=new EventEmitter<string>();
+   raiseDataEmitterEvent(data:string)
+   {
+       this.dataEmitter.emit(data)
    }
 }

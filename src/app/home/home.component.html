@@ -20,7 +20,7 @@
                         <div class="about">
                             <div class="name"> 
                                 <tr *ngFor="let users of requestedData">
-                                 <button (click)="onChange(users.userId,$event)">
+                                 <button (click)="onChange(users,$event)">
                                     <td>{{users.firstName}}</td>
                                     <!-- <app-home1></app-home1> -->
                                  </button> 

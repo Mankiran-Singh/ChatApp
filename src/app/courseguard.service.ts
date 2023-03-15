@@ -12,10 +12,7 @@ export class CourseguardService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
    {
    // provides the route configuration options.
-   const { routeConfig } = route; 
-   
    // provides the path of the route.
-   const { path } = routeConfig as Route; 
      if(localStorage.getItem('token')){
       return true;
      }

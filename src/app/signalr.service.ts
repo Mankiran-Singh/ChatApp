@@ -11,6 +11,7 @@ export class User {
   public name: string ;
   public connId: string //signalr
   public msgs: Array<Message>;//5Tutorial (only client-side property)
+  public firstName: any;
 }
 
 
@@ -43,11 +44,12 @@ export class SignalrService {
         return this.ssSubj.asObservable();
     }
 
-    startConnection = () => {
+    startConnection = (authToken :string ) => {
         this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl('http://192.180.0.127:4040/ChatHub', {
             skipNegotiation: true,
-            transport: signalR.HttpTransportType.WebSockets
+            transport: signalR.HttpTransportType.WebSockets,
+            accessTokenFactory :() => authToken
         }).withAutomaticReconnect()
         .build();
 

@@ -11,12 +11,8 @@ import { SignalrService } from './signalr.service';
   styleUrls: ['./app.component.css'],
   imports:[SignUpComponent,LoginComponent,RouterModule]
 })
-export class AppComponent implements OnInit {
+export class AppComponent  {
   constructor(private connect : SignalrService){}
-  ngOnInit(): void {
-    
-    this.connect.startConnection();
-  }
-
+ 
 
 }

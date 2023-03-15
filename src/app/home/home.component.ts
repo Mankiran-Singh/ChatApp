@@ -44,9 +44,14 @@ import { Home1Component } from "../home1/home1.component";
 })
 
 
-export class HomeComponent implements AfterViewInit,IDeactivateComponent{
+export class HomeComponent implements OnInit,AfterViewInit{
 
-  constructor(private signalrService:SignalrService,private http:HttpClient,private deactivateGuard:CandeactivatecourseguardService,private router:Router,private courseguard:CourseguardService,private authservice:AuthServiceService){}
+  constructor(private activatedRoute:ActivatedRoute,private signalrService:SignalrService,private http:HttpClient,private deactivateGuard:CandeactivatecourseguardService,private router:Router,private courseguard:CourseguardService,private authservice:AuthServiceService){
+    this.signalrService.startConnection(localStorage.getItem('token'))
+  }
+  ngOnInit(): void {
+    
+  }
 
 logout(){
   this.authservice.logOut()
@@ -55,19 +60,8 @@ changePassword(){
   this.router.navigateByUrl("changepassword")
 }
 
-firstName: any;
-lastName: any;
-country: any;
-subject: any;
 
- canExit(){
-  if(this.firstName || this.lastName || this.country || this.subject){
-   return confirm('You have unsaved changes. Do you really want to discard changes')
-  }else{
-    return true;
-  }
- }
- requestedData:any
+ @Input() requestedData:Array<any>=[]
  @ViewChild('myInput') myInput:any
  ngAfterViewInit(): void {
   const searchTerm = fromEvent<any>(this.myInput.nativeElement, 'keyup')
@@ -83,11 +77,13 @@ subject: any;
     },5000)
    })
  }
- @Input() data:Array<User>=[]
-  @Output()statusChanged : EventEmitter<{index:number,value:string}>=new EventEmitter<{index:number,value:string}>()
-  onChange(index:number,value:any){
+
+ @Output()statusChanged : EventEmitter<{index:any,value:string}>=new EventEmitter<{index:any,value:string}>()
+  onChange(index:any,value:any){
+    console.log(index)
+    console.log(index.firstName)
         this.statusChanged.emit({index:index,value:value.target.value});
-        this.router.navigate(['home1']);
+        this.router.navigate(['home1'])
   }
 
   gotohome(){

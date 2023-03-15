@@ -1,19 +1,20 @@
-import { Component,Injectable} from '@angular/core';
+import { Component,EventEmitter,Injectable} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AuthServiceService } from '../auth-service.service';
 import { CourseguardService } from '../courseguard.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SocialAuthServiceConfig, SocialLoginModule,SocialAuthService} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
 import {CandeactivatecourseguardService} from '../candeactivatecourseguard.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message, SignalrService, User } from '../signalr.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { HomeComponent } from '../home/home.component';
+import { map } from 'rxjs-compat/operator/map';
 @Injectable()
 @Component({
   selector: 'app-home1',
@@ -48,37 +49,45 @@ import { HomeComponent } from '../home/home.component';
 
 export class Home1Component {
 
-  constructor(private signalrService:SignalrService,private http:HttpClient,private deactivateGuard:CandeactivatecourseguardService,private router:Router,private courseguard:CourseguardService,private authservice:AuthServiceService){}
+  msg: any;
+  constructor(private activatedRoute:ActivatedRoute,private signalrService:SignalrService,private http:HttpClient,private deactivateGuard:CandeactivatecourseguardService,private router:Router,private courseguard:CourseguardService,private authservice:AuthServiceService){
+   
+  }
  
-  users: Array<User> = new Array<User>();
+  users: Array<any> = new Array<any>();
+  name:''
+ 
   selectedUser: User;
-  //5Tutorial
-  msg: string;
+  onStatusChange(event:any) {
+    console.log(event)
+    this.name=event.index.firstName
+  
+  }
 
+ 
   ngOnInit(): void {
     this.userOnLis();
     this.userOffLis();
     this.logOutLis();
     this.getOnlineUsersLis();
     this.sendMsgLis();
-    this.SendMessage();
-    //hubConnection.state is 1 when hub connection is connected.
-    //var hubConnection=this.signalrService.hubConnection.state
+    
+ 
+  //   hubConnection.state is 1 when hub connection is connected.
+  //  var hubConnection=this.signalrService.hubConnection.state
     if (HubConnectionState.Connected) this.getOnlineUsersInv();
     else {
       this.signalrService.ssSubj.subscribe((obj: any) => {
-        if (obj.type == "HubConnStarted") {
+        if (obj.type == "HubConnStarted"){
           this.getOnlineUsersInv();
         }
       });
     }
   }
+ 
+ 
 
-  onStatusChange(eventData:any){
-    this.users[eventData.index-1]=eventData.value
-  }
 
-  //4Tutorial
   logOut(): void {
     this.signalrService.hubConnection.invoke("logOut", this.signalrService.userData.id)
     .catch(err => console.error(err));
@@ -91,9 +100,6 @@ export class Home1Component {
     });
   }
 
-
-
-  //4Tutorial
   userOnLis(): void {
     this.signalrService.hubConnection.on("userOn", (newUser: User) => {
       console.log(newUser);
@@ -107,27 +113,31 @@ export class Home1Component {
   }
 
 
-
-  //4Tutorial
   getOnlineUsersInv(): void {
-    this.signalrService.hubConnection.invoke("getOnlineUsers")
-    .catch(err => console.error(err));
+    this.signalrService.hubConnection.invoke('OnlineUsers').catch(err => console.error(err));
   }
   private getOnlineUsersLis(): void {
-    this.signalrService.hubConnection.on("getOnlineUsersResponse", (onlineUsers: Array<User>) => {
+    this.signalrService.hubConnection.on("OnlineUsers", (onlineUsers: Array<any>) => {
       this.users = [...onlineUsers];
       console.log(this.users);
     });
   }
+  
+   tokenValue=localStorage.getItem('token')
+   httpOptions = { 
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' ,
+'Authorization': "bearer "+this.tokenValue})
+};
 
-  SendMessage(): void {
-    if (this.msg?.trim() === "" || this.msg == null) return;
-
-    this.signalrService.hubConnection.invoke("SendMessage", this.selectedUser.connId, this.msg)
+ 
+  SendMessage(userId:string,msg:string){
+   if (this.msg?.trim() === "" || this.msg == null) return;
+    console.log(this.users)
+    this.signalrService.hubConnection.invoke("SendMessage",this.users[0].userId,this.msg)
     .catch(err => console.error(err));
 
-    if (this.selectedUser.msgs == null) this.selectedUser.msgs = [];
-    this.selectedUser.msgs.push(new Message(this.msg, true));
+    if (this.users[0].msgs == null) this.users[0].msgs = [];
+    this.users[0].msgs.push(new Message(this.msg, true));
     this.msg = "";
   }
 

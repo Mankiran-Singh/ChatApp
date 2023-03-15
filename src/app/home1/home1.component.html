@@ -1,18 +1,24 @@
-<div class="container-fluid">
+<div class="row">
+  <app-home [requestedData]="users" (statusChanged)="onStatusChange($event)">
+    <p>This is </p>
+    </app-home>
+</div>
+<div class="row">
+  <div class="container-fluid">
   <div class="row">
     <div class="col-6 pl-4">
       
     </div>
-    <div class="col-6 text-right" style="cursor: pointer;" (click)="logOut()">
+    <!-- <div class="col-6 text-right" style="cursor: pointer;" (click)="logOut()"> -->
       Logout
-    </div>
+    <!-- </div> -->
   </div>
 
   <!-- 5Tutorial  -->
   <div class="row">
-    <!-- List of Users -->
+    List of Users -->
     <div class="col-12 col-sm-3 offset-sm-3 mt-4">
-      <!-- Online Users -->
+      Online Users 
       <label>Online Users</label>
       <ul class="list-group" *ngFor="let user of users">
         <li class="list-group-item" style="cursor: pointer;" (click)="selectedUser = user">{{ user.name }}</li>
@@ -28,8 +34,8 @@
                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                     </a> 
                      <div class="chat-about">
-                        <h6 class="m-b-0">Aiden Chavez</h6>
-                        <small>Last seen: 2 hours ago</small>
+                        <h6 class="m-b-0">{{name}}</h6>
+                        
                     </div>
                 </div>
                 <div class="col-lg-6 hidden-sm text-right">
@@ -66,11 +72,11 @@
         <div class="chat-message clearfix">
             <div class="input-group mb-0">
                  <div class="input-group-prepend">
-                    
-                    <button [disabled]="selectedUser == null" (click)="SendMessage()"><i class="fa fa-send"></i></button>     
+                    <button (click)="getOnlineUsersInv()">getOnlineUsers</button>
+                          <textarea [(ngModel)]="msg" id="textarea"></textarea>
+        <button id="sendBtn" class="btn btn-primary" (click)="SendMessage(users[0].userid,msg)">Send</button>
                     
                 </div>
-                <textarea [(ngModel)]="msg"  class="from-control"id="textarea" placeholder="Enter text here..."></textarea>                             
             </div>
         </div> 
 
@@ -79,7 +85,6 @@
 </div>
 <div class="container d-flex flex-row ">
     <div>
-<app-home></app-home>
 </div>
 <div>
     <div class="col-12 col-sm-3 mt-4">
@@ -94,8 +99,7 @@
             {{ msg.content }}
           </div>
         </div>
-        <!-- <textarea [(ngModel)]="msg" id="textarea"></textarea>
-        <button id="sendBtn" class="btn btn-primary" (click)="sendMsgInv()">Send</button> -->
+
       </div>
     </div>
 </div>
