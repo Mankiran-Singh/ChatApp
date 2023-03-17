@@ -4,14 +4,19 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { Constant } from 'src/constant';
 
-const url ='http://192.180.0.127:4040/';
+const url ='http://192.180.2.128:5050/api/';
 
 const tokenValue=localStorage.getItem('token')
 const httpOptions = { 
   headers: new HttpHeaders({ 'Content-Type': 'application/json' ,
 'Authorization': "bearer "+tokenValue})
 };
+const token = localStorage.getItem('token') ;
+const headers=new HttpHeaders({
+    'Authorization':'bearer '+token
+});
 @Injectable({
   providedIn: 'root'
 })
@@ -39,7 +44,7 @@ logOut()
 }
 login(email: string| null | undefined, password: string| null | undefined): Observable<any> {
   return this.http.post(
-    url + 'api/User/Login',
+    url + 'Login',
     {
       email,
       password,
@@ -48,15 +53,15 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
   );
 }
 
-    SignUp(firstName: string| null | undefined,  lastName: string| null | undefined, email: string| null | undefined, password: string| null | undefined,phone: string| null | undefined,dateOfBirth:string| null | undefined): Observable<any> {
+    SignUp(firstName: string| null | undefined,  lastName: string| null | undefined, email: string| null | undefined, password: string| null | undefined,phoneNo: string| null | undefined,dateOfBirth:string| null | undefined): Observable<any> {
       return this.http.post(
-        url + 'api/User/Register',
+        url + 'User/Registration',
         {
           firstName,
           lastName,
           email,
           password,
-          phone,
+          phoneNo,
           dateOfBirth
         },
         httpOptions
@@ -109,15 +114,29 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
    isLoggedIn():boolean{
     return !!localStorage.getItem('token')
    }
-   getDataSearch(data:any){
-     const query={'Name':data}
-     const token =localStorage.getItem('token')
-     const headers={Authorization: `bearer ${token}`}
-     return this.http.get(url+'api/User/Search',{params:query,headers:headers});
-   }
+  
+    usergetMatch(searchText:string)
+    {
+      return this.http.get(`${URL}`+"User?searchString="+searchText,{headers:headers})
+    }
+
+    userGet()
+    {
+     return this.http.get(`${URL}`+Constant.Url.user)
+    }
+  
    dataEmitter=new EventEmitter<string>();
    raiseDataEmitterEvent(data:string)
    {
        this.dataEmitter.emit(data)
+   }
+
+   logout()
+   {
+     return this.http.post(`${URL}`+Constant.Url.logout,{headers:httpOptions.headers})
+   }
+   SignOut()
+   {
+     localStorage.clear();
    }
 }

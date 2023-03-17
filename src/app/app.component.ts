@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignalrService } from './signalr.service';
 
 @Component({
@@ -9,10 +7,10 @@ import { SignalrService } from './signalr.service';
   standalone:true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports:[SignUpComponent,LoginComponent,RouterModule]
+  imports:[RouterModule]
 })
 export class AppComponent  {
-  constructor(private connect : SignalrService){}
- 
-
+  constructor(private connect : SignalrService){
+  //  this.connect.startConnection(localStorage.getItem('token'))
+  }
 }

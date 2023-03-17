@@ -1,0 +1,47 @@
+
+<div>
+    <div class="toast show-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto"> Message </strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          You received a new message from {{name}}
+    </div>
+    </div>
+    <div class="container container-fluid px-1 py-5 mx-auto chat-display">
+        <div class="row justify-content-between text-left "></div>
+        <div class="col-sm-12 flex-row d-flex justify-content-center">
+            <h2> {{data['firstName']}}</h2>
+        </div>
+        <div class="overflow-auto message-display" #msgBox id="msgBox" [scrollTop]="msgBox.scrollHeight">
+            <div *ngFor="let msg of msgArray">
+                <div *ngIf="(msg.senderEmail === currentUser)">
+                    <ul class="sender">
+                        <li> {{msg.message}} <p> {{msg.dateTime | date : 'medium'}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf=" (msg.senderEmail === data['email'])">
+                    <ul class="reciever">
+                        <li> {{msg.message}}<p> {{msg.dateTime | date : 'medium' }}</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="textArea">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" [(ngModel)]="message"></textarea>
+            <button type="button" class="btn" (click)="sendMsg()"> </button>
+        </div>
+    </div>
+    
+    <div class="toast show-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="..." class="rounded me-2" alt="...">
+          <strong class="me-auto">Bootstrap</strong>
+          <small class="text-muted">11 mins ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          You received a new message from 
+    </div>

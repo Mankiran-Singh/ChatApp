@@ -1,26 +1,27 @@
-import { Component, OnInit, ViewChild ,ElementRef, AfterViewInit, Injectable, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ViewChild ,ElementRef, AfterViewInit, Injectable, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AuthServiceService } from '../auth-service.service';
 import { CourseguardService } from '../courseguard.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {  Router, RouterModule } from '@angular/router';
 import { SocialAuthServiceConfig, SocialLoginModule,SocialAuthService} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
-import {CandeactivatecourseguardService, IDeactivateComponent } from '../candeactivatecourseguard.service';
-import { debounceTime, distinct, distinctUntilChanged, fromEvent, map } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Message, SignalrService, User } from '../signalr.service';
-import { Home1Component } from "../home1/home1.component";
+import {CandeactivatecourseguardService} from '../candeactivatecourseguard.service';
+
+import {SignalrService} from '../signalr.service';
+import { NavComponent } from '../nav/nav.component';
+import { SendMessageComponent } from '../send-message/send-message.component';
 @Injectable()
 @Component({
     selector: 'app-home',
     standalone: true,
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    providers: [AuthServiceService, CourseguardService, SocialAuthService, CandeactivatecourseguardService,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SocialLoginModule, NavComponent, RouterModule, SendMessageComponent],
+    providers: [AuthServiceService, CourseguardService, SocialAuthService, CandeactivatecourseguardService, SendMessageComponent,
         {
             provide: 'SocialAuthServiceConfig',
             useValue: {
@@ -40,53 +41,76 @@ import { Home1Component } from "../home1/home1.component";
                 }
             } as SocialAuthServiceConfig,
         }],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, SocialLoginModule, Home1Component,RouterModule]
+   
 })
 
 
-export class HomeComponent implements OnInit,AfterViewInit{
-
-  constructor(private activatedRoute:ActivatedRoute,private signalrService:SignalrService,private http:HttpClient,private deactivateGuard:CandeactivatecourseguardService,private router:Router,private courseguard:CourseguardService,private authservice:AuthServiceService){
-    this.signalrService.startConnection(localStorage.getItem('token'))
-  }
-  ngOnInit(): void {
+export class HomeComponent implements OnInit,OnDestroy{
+    msgArray :any ='';
+    chatId :string = ''
+    ngOnInit(): void {
+    }
     
-  }
+    ngOnDestroy(): void {
+      this.chatService._hubConnection?.off("recieveMessage")
+    }
 
-logout(){
-  this.authservice.logOut()
-}
-changePassword(){
-  this.router.navigateByUrl("changepassword")
-}
+    onlineUsers :Array<any> =[]
+    selectedUserdata :any=[]
+    userArray :any=[];
+    showUser : boolean = false;
+    currentUserName: string ='';
+    currentUserEmail : string ='';
+    constructor(private route: Router , private service :AuthServiceService , private chatService : SignalrService){
+        const curr =  this.route.getCurrentNavigation();
+        const state = curr?.extras.state as {
+         'name' : string,
+         'email' :string,
+         'token' :string,
+        }
+ 
+        this.currentUserName= state.name;
+        this.currentUserEmail = state.email;
+
+        this.chatService.startConnection(state.token);
+        this.chatService.onlineUsers.subscribe((response :any)=>{
+            this.onlineUsers = response;
+            console.log(this.onlineUsers);
+        })
+    }
+
+    getUser(event:any)
+    {   
+        const val = event.target.value;
+        if(val.length != null)
+        {
+            this.service.usergetMatch(val).subscribe((response :any)=>{
+                const obj= response['data'];
+                this.userArray = obj;
+                console.log(this.userArray)
+            })
+        }        
+           this.service.userGet().subscribe((response)=>{
+            console.log(response);
+           });
+
+        this.showUser=true;
+    }
 
 
- @Input() requestedData:Array<any>=[]
- @ViewChild('myInput') myInput:any
- ngAfterViewInit(): void {
-  const searchTerm = fromEvent<any>(this.myInput.nativeElement, 'keyup')
-   searchTerm.pipe(map(event=>event.target.value)).subscribe((res)=>{
-    debounceTime(5000)
-    distinctUntilChanged()
-    this.authservice.getDataSearch(res).subscribe((data:any)=>{
-      console.log(data)
-     this.requestedData=data.data
-    })
-    setTimeout(()=>{
-      this.requestedData=null
-    },5000)
-   })
- }
+    getUserMessage(event:any)
+    {
+        this.selectedUserdata= event
 
- @Output()statusChanged : EventEmitter<{index:any,value:string}>=new EventEmitter<{index:any,value:string}>()
-  onChange(index:any,value:any){
-    console.log(index)
-    console.log(index.firstName)
-        this.statusChanged.emit({index:index,value:value.target.value});
-        this.router.navigate(['home1'])
-  }
+        console.log(this.selectedUserdata)
+        this.chatService.addChat(this.selectedUserdata['email']).then((response: any)=>{
+          this.chatId= response;
 
-  gotohome(){
-    this.router.navigate(['home1'])
-  }
+          this.chatService.getChat(response);
+            this.chatService.chatSubject.subscribe((response=>{
+            this.msgArray = response;
+            }))
+        })
+        this.userArray.length=0;
+    }
 }

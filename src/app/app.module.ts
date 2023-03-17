@@ -15,8 +15,11 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { WebsocketsService } from './websockets.service';
 import { ChatService } from './chat.service';
+import { SendMessageComponent } from './send-message/send-message.component';
 @NgModule({
   declarations: [
+  
+    SendMessageComponent
   ],
   imports: [
     BrowserModule,

@@ -46,18 +46,10 @@ export class SignUpComponent
   constructor(private authService:SocialAuthService,private authservice:AuthServiceService,private coursegurad:CourseguardService,private router:Router,private activatedRoute:ActivatedRoute,private http:HttpClient){
   
   }
-  form: any = {
-    firstName: null,
-    lastName: null,
-    email: null,
-    password: null,
-    phone:null,
-    dateOfBirth:null
-  };
   signUpForm=new FormGroup({
     email:new FormControl('',[Validators.required,Validators.email]),
     password:new FormControl('',[Validators.required,Validators.minLength(5)]),
-    phone:new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+    phoneNo:new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
     firstName:new FormControl('',[Validators.required,Validators.minLength(1)]),
     lastName:new FormControl('',[Validators.required,Validators.minLength(1)]),
     dateOfBirth:new FormControl('',Validators.required)
@@ -67,13 +59,13 @@ export class SignUpComponent
    showErrors=false;
   SignUpUser(){
      if(this.signUpForm.valid){
-      const { firstName , lastName, email, password,phone,dateOfBirth} = this.signUpForm.value
-      this.authservice.SignUp(firstName, lastName, email, password,phone,dateOfBirth).subscribe(
+      const { firstName , lastName, email, password, phoneNo,dateOfBirth} = this.signUpForm.value
+      this.authservice.SignUp(firstName, lastName, email, password,phoneNo,dateOfBirth).subscribe(
         (res:any)=>{
           console.log(res)
           this.signUpForm.reset();
           this.authservice.storeToken(res.data);
-         // console.log(res['token'])
+          console.log(res['token'])
           this.router.navigate(['home']);
         }
       );
@@ -101,8 +93,8 @@ export class SignUpComponent
     return this.signUpForm.get('password')
   }
 
-  get phone(){
-    return this.signUpForm.get('phone')
+  get phoneNo(){
+    return this.signUpForm.get('phoneNo')
   }
   get dateOfBirth(){
     return this.signUpForm.get('dateOfBirth')

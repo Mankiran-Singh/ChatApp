@@ -27,8 +27,8 @@
         </div>
        
         <label for="phone"><b>Phone Number</b></label>
-        <input  type="number" placeholder="Enter Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '')"name="phone" formControlName="phone" id="phone.id"> 
-        <span style="color:brown"*ngIf="phone && phone.invalid && phone.errors?.['required'] && showErrors">This field is not valid</span>
+        <input  type="number" placeholder="Enter Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '')"name="phoneNo" formControlName="phoneNo" id="phone.id"> 
+        <span style="color:brown"*ngIf="phoneNo && phoneNo.invalid && phoneNo.errors?.['required'] && showErrors">This field is not valid</span>
         <br>
         <br>
 

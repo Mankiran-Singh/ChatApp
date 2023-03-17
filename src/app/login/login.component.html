@@ -1,10 +1,10 @@
 <form [formGroup]="loginForm" (ngSubmit)="loginUser() ">
-    <div class="imgcontainer">
-      <img src="assets/img_avatar2.png" alt="Avatar" class="avatar">
-    </div>
-  
    <div class="form-group">
     <div class="container">
+      <div class="imgcontainer">
+        <img src="assets/img_avatar2.png" alt="Avatar" class="avatar">
+      </div>
+    
       <label for="email"><b>Email</b></label>
       <input type="text" placeholder="Enter email" name="email" formControlName="email">
       <span style="color:brown"*ngIf="email && email.invalid && email.errors?.['required'] && showErrors">This field is not valid</span>
