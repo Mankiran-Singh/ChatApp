@@ -15,19 +15,22 @@ import { ChangepasswordComponent } from './app/changepassword/changepassword.com
 import { CandeactivatecourseguardService } from './app/candeactivatecourseguard.service';
 import { AuthguardService } from './app/authguard.service';
 import { InterceptorService } from './app/interceptor.service';
-import { NavComponent } from './app/nav/nav.component';
+import { NavComponent } from './app/navbar/navbar.component';
+import { ProfileComponent } from './app/profile/profile.component';
+import { GuardService } from './guard.service';
 const routes:Route[]=[
   {path:'',redirectTo:'signup',pathMatch:'full'},
-  {path:'login',component:LoginComponent,canActivate:[AuthguardService]},
-  {path:'signup',component:SignUpComponent,canActivate:[AuthguardService]},
-  {path:'home',component:HomeComponent,canActivate:[CourseguardService]},
-  // {path:'login',component:LoginComponent},
-  // {path:'signup',component:SignUpComponent},
-  // {path:'home',component:HomeComponent},
+  // {path:'login',component:LoginComponent,canActivate:[AuthguardService]},
+  // {path:'signup',component:SignUpComponent,canActivate:[AuthguardService]},
+  // {path:'home',component:HomeComponent,canActivate:[CourseguardService]},
+  {path:'login',component:LoginComponent},
+  {path:'signup',component:SignUpComponent},
+  {path:'home',component:HomeComponent},
   {path:'resetpassword',component:ResetPasswordComponent},
   {path:'forgetpassword',component:ForgetPasswordComponent},
   {path:'changepassword',component:ChangepasswordComponent},
-  {path:'home1',component:NavComponent}
+  {path:'home1',component:NavComponent},
+  {path:'profile',component:ProfileComponent}
 ]
 
 
@@ -37,6 +40,7 @@ bootstrapApplication(AppComponent,{
     CandeactivatecourseguardService,
     CourseguardService,
     AuthServiceService,
+    GuardService,
     importProvidersFrom(HttpClientModule),
     {provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}
   ]

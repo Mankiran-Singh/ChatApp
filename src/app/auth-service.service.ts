@@ -117,12 +117,12 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
   
     usergetMatch(searchText:string)
     {
-      return this.http.get(`${URL}`+"User?searchString="+searchText,{headers:headers})
+      return this.http.get(url+"User?searchString="+searchText,{headers:headers})
     }
 
     userGet()
     {
-     return this.http.get(`${URL}`+Constant.Url.user)
+     return this.http.get(url+Constant.Url.user)
     }
   
    dataEmitter=new EventEmitter<string>();
@@ -133,10 +133,32 @@ login(email: string| null | undefined, password: string| null | undefined): Obse
 
    logout()
    {
-     return this.http.post(`${URL}`+Constant.Url.logout,{headers:httpOptions.headers})
+     return this.http.post(url+Constant.Url.logout,{headers:headers})
    }
    SignOut()
    {
      localStorage.clear();
    }
+   fileupload(file:any,type:number,email:string){
+   const params={
+     type:type,
+     Email:email
+   }
+   return this.http.post(url+Constant.Url.fileUpload,file,{params:params})
+   }
+   profile(){
+    return this.http.get(url+Constant.Url.profile)
+   }
+   update(id:string){
+    return this.http.put(url+Constant.Url.update,id)
+   }
+   profileImage(file:any){
+     return this.http.post(url+Constant.Url.profileImage,file)
+   }
+
+   dataEmit=new Subject<any>();
+    raiseDataEmitter()
+    {
+       return this.dataEmit.next('')
+    }
 }

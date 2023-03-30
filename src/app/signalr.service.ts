@@ -49,48 +49,46 @@ export class SignalrService {
       }).withAutomaticReconnect().build();
 
       this._hubConnection.start().then(()=>{
-          console.log("Connection started ");
+         // console.log("Connection started ");
           this.refreshListener();
       }).catch((error: any)=>{
-          console.log(" Error While starting connection "+error);
+         // console.log(" Error While starting connection "+error);
       });
   }
 
-  sendMessage(email:string , msg :string)
+  sendMessage(email:string,msg:string,type:number,url:string,fileName:any)
   {
-      return this._hubConnection?.invoke("sendMessage",email,msg ).catch((error:Error)=>{
-             console.log('error');
-      });
+      return this._hubConnection?.invoke("sendMessage",email,msg,type,url,fileName);
   }
 
   addChat(email:string)
   {
       return this._hubConnection.invoke("addChat",email).catch((error:Error)=>{
           console.log('error');
-   });
+      });
   }
 
   receiveMessageListener()
   {
-      return this._hubConnection.on('receiveMessage', (userEmail:string, message:string) => {
-          this.Message.next({ userEmail,message});
-          console.log(`${userEmail}: ${message}`);
-  })
+      return this._hubConnection.on('receiveMessage', (response) => {
+          this.Message.next(response);
+      })
   }
 
   saveData(email:string)
   {
       return this._hubConnection.invoke('saveData',email).then((value:string)=>{
-          console.log(value)
+         // console.log(value)
       }).catch((error:Error)=>{
           console.log('error');
    });
 }
 
 
-  getChat(id:string)
+  getChat(id:string,pageNumber:Number)
   {
-       this._hubConnection.invoke('previousMessages',id).then((response : any )=>{
+       this._hubConnection.invoke('previousMessages',id,pageNumber).then((response : any )=>{
+         // console.log(response.data)
           this.chatSubject.next(response.data);
        }).catch((error:any)=>{
           console.log('error');
@@ -99,23 +97,19 @@ export class SignalrService {
 
   refreshListener()
   {
-      console.log(" Iam inside refresh")
       this._hubConnection.on('refresh' ,()=>{
-      
-          console.log(" heyy i am invoked")
           return this._hubConnection.invoke('getUsers').then((response :any)=>{
-              console.log(response);
+              //console.log(response);
               this.onlineUsers.next(response.data);
           })
               .catch((error:any)=>{
                   console.log('error');
-           }); 
+               }); 
       })
   }
 
   getUsers()
   {
-      console.log(" heyy i am invoked")
       return this._hubConnection.invoke('getUsers').catch((error:any)=>{
           console.log('error');
    }); 

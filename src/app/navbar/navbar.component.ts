@@ -3,23 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AuthServiceService } from '../auth-service.service';
 import { CourseguardService } from '../courseguard.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {  Router, RouterModule } from '@angular/router';
 import { SocialAuthServiceConfig, SocialLoginModule,SocialAuthService} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
 import {CandeactivatecourseguardService, IDeactivateComponent } from '../candeactivatecourseguard.service';
-import { debounceTime, distinct, distinctUntilChanged, fromEvent, map } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Message, SignalrService, User } from '../signalr.service';
-import { SendMessageComponent } from '../send-message/send-message.component';
+
 
 @Component({
-  selector: 'app-nav',
+  selector: 'app-navbar',
   standalone: true,
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css'],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, SocialLoginModule,RouterModule],
     providers: [AuthServiceService, CourseguardService, SocialAuthService, CandeactivatecourseguardService, 
         {

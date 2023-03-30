@@ -1,26 +1,26 @@
-import { Component, OnInit, ViewChild ,ElementRef, AfterViewInit, Injectable, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import { Component, OnInit, ViewChild ,ElementRef, AfterViewInit, Injectable, Input, Output, EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AuthServiceService } from '../auth-service.service';
 import { CourseguardService } from '../courseguard.service';
-import {  Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SocialAuthServiceConfig, SocialLoginModule,SocialAuthService} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
-import {CandeactivatecourseguardService} from '../candeactivatecourseguard.service';
-
-import {SignalrService} from '../signalr.service';
-import { NavComponent } from '../nav/nav.component';
+import {CandeactivatecourseguardService, IDeactivateComponent } from '../candeactivatecourseguard.service';
+import { SignalrService} from '../signalr.service';
+import { NavComponent } from '../navbar/navbar.component';
 import { SendMessageComponent } from '../send-message/send-message.component';
+import { urlImage } from 'src/constant';
 @Injectable()
 @Component({
     selector: 'app-home',
     standalone: true,
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, SocialLoginModule, NavComponent, RouterModule, SendMessageComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SocialLoginModule,NavComponent, RouterModule, SendMessageComponent],
     providers: [AuthServiceService, CourseguardService, SocialAuthService, CandeactivatecourseguardService, SendMessageComponent,
         {
             provide: 'SocialAuthServiceConfig',
@@ -45,11 +45,12 @@ import { SendMessageComponent } from '../send-message/send-message.component';
 })
 
 
-export class HomeComponent implements OnInit,OnDestroy{
-    msgArray :any ='';
-    chatId :string = ''
-    ngOnInit(): void {
-    }
+export class HomeComponent implements OnInit{
+
+    msg:any ='';
+    IdChat :string = ''
+    pageNumber:Number=1;
+    urlImage=urlImage
     
     ngOnDestroy(): void {
       this.chatService._hubConnection?.off("recieveMessage")
@@ -61,56 +62,67 @@ export class HomeComponent implements OnInit,OnDestroy{
     showUser : boolean = false;
     currentUserName: string ='';
     currentUserEmail : string ='';
-    constructor(private route: Router , private service :AuthServiceService , private chatService : SignalrService){
+    url=''
+    @ViewChild('msgBox') msgBox:any;
+    constructor(private route: Router , 
+        private service :AuthServiceService , 
+        private chatService : SignalrService,
+        private activatedroute:ActivatedRoute){
         const curr =  this.route.getCurrentNavigation();
         const state = curr?.extras.state as {
          'name' : string,
          'email' :string,
          'token' :string,
         }
- 
+        state.token;
         this.currentUserName= state.name;
         this.currentUserEmail = state.email;
-
-        this.chatService.startConnection(state.token);
+        this.chatService.startConnection(localStorage.getItem('token'));
         this.chatService.onlineUsers.subscribe((response :any)=>{
             this.onlineUsers = response;
-            console.log(this.onlineUsers);
+           
         })
     }
-
+   
     getUser(event:any)
-    {   
+    {    
         const val = event.target.value;
         if(val.length != null)
         {
             this.service.usergetMatch(val).subscribe((response :any)=>{
                 const obj= response['data'];
                 this.userArray = obj;
-                console.log(this.userArray)
             })
         }        
            this.service.userGet().subscribe((response)=>{
-            console.log(response);
+            
            });
 
         this.showUser=true;
     }
-
-
-    getUserMessage(event:any)
+  
+    ngOnInit(): void { 
+    }
+    getMessage(event:any)
     {
         this.selectedUserdata= event
-
-        console.log(this.selectedUserdata)
+        //console.log(this.selectedUserdata)
         this.chatService.addChat(this.selectedUserdata['email']).then((response: any)=>{
-          this.chatId= response;
-
-          this.chatService.getChat(response);
+          this.IdChat= response;
+        //    this.pageNumber=response;
+          this.chatService.getChat(response,this.pageNumber);
             this.chatService.chatSubject.subscribe((response=>{
-            this.msgArray = response;
+            this.msg = response;
+            //this.service.raiseDataEmitter()
             }))
         })
         this.userArray.length=0;
+        this.service.raiseDataEmitter()
     }
+    
+    usersData:any=[]
+    getProfile(){
+        this.route.navigate(['profile'])
+    }
+
 }

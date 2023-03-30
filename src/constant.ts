@@ -12,7 +12,11 @@ export const Constant = {
       sendMail :'Password/ForgetPassword',
       logout :'Login/logOut',
       googleLogin : 'Login/GoogleAuth',
-      user :'User'
+      user :'User',
+      fileUpload:'File/file',
+      profile:'User/profile',
+      update:'User',
+      profileImage:'File/Profileimage'
     },
 }
 
@@ -28,5 +32,10 @@ export const REGEX = {
 };
 
 export const URL = "http://192.180.2.128:5050/api/"
+export const urlImage='http://192.180.2.128:5050/Assets//Images//mankiransingh8@gmail.com 17-6 22-3-2023 xtx 4x6 jjsdjsjdsd-1.jpg'
+export let text=1
+export let image=2
+export let filetype=3
+export let urlChooseFile='assets/chooseFile.jpg'
 
 

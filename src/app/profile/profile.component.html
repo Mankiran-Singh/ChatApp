@@ -1,0 +1,38 @@
+<div class="formContainer">
+    <h3 style="text-align: center;" style="font-style:inherit;">{{usersData[0].firstName}}</h3>
+  <div class="form-group">
+   <form [formGroup]="profileForm" (ngSubmit)="Update(profileForm.value)">
+    <img [src]="url ? url:urlImage" width="100" height="100"> <br/>
+    
+    <div class="row">
+        <input class="col" type="file" (change)="getFile($event)" width="48" height="48" formControlName="image">
+        <button (click)="uploadImage(file)" style="width:20px; height:30px;">
+            <mat-icon
+             class="mat-icon-size">attach_file</mat-icon>
+        </button>
+    
+    </div>
+    <br>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="{{usersData[0].email}}"name="email" formControlName="email">
+      <span style="color:brown"*ngIf="email && email.invalid && email.errors?.['required'] && showErrors">This field is not valid</span>
+   <br>
+      <label for="dateofBirth"><b>Date of Birth</b></label>
+      <input type="date" placeholder="{{usersData[0].dateOfBirth}}" name="dateOfBirth" formControlName="dateOfBirth">
+      <span style="color:brown"*ngIf="dateOfBirth && dateOfBirth.invalid && dateOfBirth.errors?.['required'] && showErrors">This field is not valid</span>
+   <br>
+      <label for="firstName"><b>First Name</b></label>
+      <input type="text" placeholder="{{usersData[0].firstName}}" name="firstName" formControlName="firstName">
+      <span style="color:brown"*ngIf="firstName && firstName.invalid && firstName.errors?.['required'] && showErrors">This field is not valid</span>
+   <br>
+      <label for="lastName"><b>Last Name</b></label>
+      <input type="text" placeholder="{{usersData[0].lastName}}" name="product" formControlName="lastName">
+      <span style="color:brown"*ngIf="lastName && lastName.invalid && lastName.errors?.['required'] && showErrors">This field is not valid</span>
+   <br>
+   <label for="lastName"><b>Phone Number</b></label>
+      <input type="number" placeholder="{{usersData[0].phoneNo}}" name="phoneNo" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  formControlName="phoneNo">
+      <span style="color:brown"*ngIf="phoneNo && phoneNo.invalid && phoneNo.errors?.['required'] && showErrors">This field is not valid</span>
+      <button type="submit" class="button">Update</button>
+   </form>
+  </div>
+</div>

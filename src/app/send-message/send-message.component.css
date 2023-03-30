@@ -3,7 +3,7 @@
 {
     width: 700px;
     height: 600px;
-    background-color: azure;
+    background-color:white;
 }
 
 h2
@@ -31,9 +31,16 @@ img
 {
     width: 600px;
     height: 500px;
-    background-color: rgb(236, 169, 86);
+    background-color:aqua;
     padding: 20px;
     border-radius: 30px;
+}
+.fileUpld{
+    height: 40px;
+    width: 40px;
+    /* background-image: url(../../assets/pngtree-file-upload-icon-image_1344393.jpg); */
+    background-size: contain;
+    float: right;
 }
 
 .btn
@@ -49,20 +56,22 @@ img
 {
     width :350px ; 
     height : 50px ; 
-    color: rgb(0, 0, 0) ; 
+    color: whitesmoke ; 
     float: right; 
-    background-color: rgb(176, 248, 192); 
+    background-color:black; 
     border-radius: 20px;
     padding-bottom: 10px;
+    
 }
+
 
 .reciever
 {
     width :350px ; 
     height : 50px ; 
-    color: rgb(0, 0, 0); 
+    color:white; 
     float: left; 
-    background-color: rgb(255, 255, 255);
+    background-color: blueviolet;
     border-radius: 20px;
     padding-bottom: 10px;
 }
@@ -74,8 +83,13 @@ img
 
 h2
 {
-width: 500px;
-height: 30px;
-background-color: rgb(182, 158, 180);
-border-radius: 50px;
+width: 700px;
+height: 50px;
+
+border-radius: 30px;
+text-align: center;
+justify-content: center;
+}
+overflow-auto message-display{
+    overflow-y: scroll;
 }

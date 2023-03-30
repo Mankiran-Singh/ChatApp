@@ -1,37 +1,79 @@
-
 <div>
     <div class="toast show-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto"> Message </strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          You received a new message from {{name}}
-    </div>
+       <br>
+       <div class="toast-header">
+        <strong class="me-auto"> Message </strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+       <br>
     </div>
     <div class="container container-fluid px-1 py-5 mx-auto chat-display">
         <div class="row justify-content-between text-left "></div>
         <div class="col-sm-12 flex-row d-flex justify-content-center">
             <h2> {{data['firstName']}}</h2>
         </div>
-        <div class="overflow-auto message-display" #msgBox id="msgBox" [scrollTop]="msgBox.scrollHeight">
-            <div *ngFor="let msg of msgArray">
-                <div *ngIf="(msg.senderEmail === currentUser)">
-                    <ul class="sender">
-                        <li> {{msg.message}} <p> {{msg.dateTime | date : 'medium'}}</p>
-                        </li>
+        <div #msgBox class="overflow-auto message-display" style="overflow-y: scroll;height: 500px;width: 600px;" id="msgBox"  infiniteScroll
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="onScroll()">
+              <div *ngFor="let msg of messageArray">
+                <div *ngIf="(msg.receiverEmail === data['email'])">
+                     <ul class="sender">
+                        <div *ngIf="msg.type===text">
+                          <li> {{msg.message}} <p> {{msg.dateTime | date : 'medium'}}</p></li>
+                        </div>
+                       <div *ngIf="msg.type===image">
+                         <li>{{msg.dateTime | date : 'medium'}} <img [src]="msg.fileUrl" ></li>
+                       </div>
                     </ul>
+                    <div *ngIf="msg.type===files">
+                        <li>{{msg.dateTime | date : 'medium'}}
+                           <p><iframe [src]="msg.fileUrl | safe : 'resourceUrl'" style="width:300px;height:300px;">{{msg.file}}</iframe></p>
+                        </li>
+                    </div>
+                   
+                  
                 </div>
                 <div *ngIf=" (msg.senderEmail === data['email'])">
                     <ul class="reciever">
-                        <li> {{msg.message}}<p> {{msg.dateTime | date : 'medium' }}</p></li>
+                        <div *ngIf="msg.type===text">
+                            <li> {{msg.message}} <p> {{msg.dateTime | date : 'medium'}}</p></li>
+                        </div>
+                       <div *ngIf="msg.type===image">
+                        <img [src]="msg.fileUrl">
+                        <p>{{msg.dateTime | date : 'medium'}}</p>
+                       </div>
+                     
                     </ul>
+                    <div *ngIf="msg.type===files">
+                        <li>{{msg.dateTime | date : 'medium'}}<p><iframe [src]="msg.fileUrl | safe : 'resourceUrl'" style="width:400px;height: 100px;"></iframe></p></li>
+                     </div>
                 </div>
             </div>
         </div>
+     
+        </div>
+        <br>
         <div class="textArea">
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" [(ngModel)]="message"></textarea>
-            <button type="button" class="btn" (click)="sendMsg()"> </button>
+           <div class="row">
+             <div class="col">
+                <input placeholder="Type a message. Hit Enter to send" type="text" (blur)="onBlur()" (focus)="onFocus()"
+                 name="message" [(ngModel)]="message"> <button (click) ="toggleEmojiPicker()"> 😀</button><br>
+             </div>
+        
+            <div class="col">
+                <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+            </div>
+
+           </div>
+            <button type="button" class="btn" (click)="sendMsg()" #fileUpload #msgBox id="msgBox"></button>
+                <input type="file" (change)="getFile($event)"><br/>  
+                <button (click)="uploadImage(file)">
+                    <mat-icon class="mat-icon-size">image_upload</mat-icon>
+                </button>
+                <button (click)="uploadFile(file)">
+                    <mat-icon>file_upload</mat-icon>
+                </button>
         </div>
     </div>
     

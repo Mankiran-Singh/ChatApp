@@ -1,21 +1,26 @@
-<app-nav [currentUser]= "currentUserName"></app-nav>
+<app-navbar [currentUser]= "currentUserName"></app-navbar>
+<button class="btn" (click)="getProfile()" style="color:black;" styel="Bootstrap">User's Profile</button>
+<img [src]="url ? url:urlImage" width="100" height="100"> <br/>
+
 <div class="nav flex-row">
   <div>
     <input class="form-control me-2 search-bar" type="text" placeholder="Search" aria-label="Search" (keyup)="getUser($event)">
     <div *ngFor="let user of userArray">
-      <button (click)="getUserMessage(user)" class="btn btn-show"> {{user.firstName+"  "+ user.lastName}}</button>
-
+      <button (click)="getMessage(user)" class="btn btn-show"> {{user.firstName+"  "+ user.lastName}}</button>
     </div>
-    <!-- <div>
+   <!-- <div>
     <app-addChat [data]="selectedUserdata"> </app-addChat>
     </div> -->
   </div>
   <div class="chats">
-    <app-send-message [data]="selectedUserdata" [chatId]="chatId" [currentUser]=" currentUserEmail"  [msgArray]="msgArray"></app-send-message>
+    <app-send-message [data]="selectedUserdata" [chatId]="IdChat" [currentUser]=" currentUserEmail"  [messageArray]="msg"></app-send-message>
     <div class="online_users show_users">
       <h3>Users</h3>
       <div *ngFor=" let users of onlineUsers">
-          <button class="btn" [ngClass]=" users.isActive ? 'btn btn-success':'btn btn-info'" (click)="getUserMessage(users)"> {{users.firstName}}</button>
+          <div class="row">
+            <button class="col" [ngClass]=" users.isActive ? 'btn btn-success':'btn btn-info'" (click)="getMessage(users)" style="width: 40px;">{{users.firstName}}
+            </button>
+          </div>
       </div>
   </div>
   </div>

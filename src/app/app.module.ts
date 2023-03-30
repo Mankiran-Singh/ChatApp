@@ -13,13 +13,12 @@ import {
 } from '@abacritt/angularx-social-login';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { WebsocketsService } from './websockets.service';
-import { ChatService } from './chat.service';
-import { SendMessageComponent } from './send-message/send-message.component';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+
+
 @NgModule({
   declarations: [
-  
-    SendMessageComponent
+
   ],
   imports: [
     BrowserModule,
@@ -28,9 +27,9 @@ import { SendMessageComponent } from './send-message/send-message.component';
     FormsModule,
     ReactiveFormsModule,
     AppComponent,
-    SocialLoginModule
+    SocialLoginModule,
   ],
-  providers:[WebsocketsService,ChatService,CourseguardService,AuthServiceService,SocialAuthService,
+  providers:[CourseguardService,AuthServiceService,SocialAuthService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
